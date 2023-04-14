@@ -2,7 +2,7 @@ import math
 from constant import GREY, TRACK_WIDTH, WHITE
 
 
-def circular_arc(center: list[float], start_angle: float,
+def circular_arc(center: tuple[float, float], start_angle: float,
                  finish_angle: float, steps: int,
                  radius: float, width: float):
     inner_points = []
@@ -20,7 +20,7 @@ def circular_arc(center: list[float], start_angle: float,
             int(center[1] - (outer_radius * math.sin(math.radians(theta))))
         ))
 
-        theta += delta_theta/steps
+        theta += delta_theta / steps
 
     theta = start_angle
 
@@ -30,7 +30,7 @@ def circular_arc(center: list[float], start_angle: float,
             int(center[1] - (inner_radius * math.sin(math.radians(theta))))
         ))
 
-        theta += delta_theta/steps
+        theta += delta_theta / steps
 
     return (outer_points, inner_points)
 
@@ -51,7 +51,7 @@ def checkerboard_pattern(x, y, width, height, box_size):
     return boxes
 
 
-def grid_slots(x: int, y: int, slot_size: int,
+def grid_slots(x: float, y: float, slot_size: int,
                slot_padding: int, n: int) -> list[list[tuple[float, float]]]:
     assert (slot_size * 2) + (slot_padding * 3) == TRACK_WIDTH
 

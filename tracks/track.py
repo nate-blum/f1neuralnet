@@ -2,6 +2,7 @@ import abc
 from pygame import Surface
 from models.car import Car
 
+
 class Track(abc.ABC):
     @abc.abstractmethod
     def __init__(self, x: int, y: int, width: int, height: int):

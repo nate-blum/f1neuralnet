@@ -4,9 +4,11 @@ from models.car import Car
 from models.timer import Timer
 from tracks.track import Track
 
+
 def draw_debug_graphics(screen):
     pygame.draw.line(screen, RED, (WINDOW_WIDTH / 2, 0), (WINDOW_WIDTH / 2, WINDOW_HEIGHT))
     pygame.draw.line(screen, RED, (0, WINDOW_HEIGHT / 2), (WINDOW_WIDTH, WINDOW_HEIGHT / 2))
+
 
 def draw_debug_info(screen: pygame.Surface, player: Car, track: Track, timer: Timer):
     font = pygame.font.Font('freesansbold.ttf', 24)
@@ -28,6 +30,7 @@ def draw_debug_info(screen: pygame.Surface, player: Car, track: Track, timer: Ti
     ]
     for i in range(0, len(laps)):
         screen.blit(laps[i], (300, 380 + (30 * i)))
+
 
 def draw_car_debug(car):
     pass
