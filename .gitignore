@@ -2,3 +2,6 @@
 .vscode
 setup.cfg
 .DS_Store
+venv
+*.egg-info
+build

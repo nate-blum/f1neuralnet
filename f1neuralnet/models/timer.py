@@ -1,4 +1,4 @@
-import datetime
+
 
 class Timer():
     def __init__(self):
@@ -15,7 +15,7 @@ class Timer():
             self.laps.append(self.current_lap)
         self.current_lap = 0
 
-    def tick(self, dt: int):
+    def tick(self, dt: float):
         self.current_lap += (dt * 1000)
 
     def format(self, time: int):

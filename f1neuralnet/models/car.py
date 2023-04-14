@@ -2,6 +2,7 @@ import math
 import pygame
 from constant import CAR_HEIGHT, CAR_WIDTH, RED, TRANSPARENT
 
+
 # https://asawicki.info/Mirror/Car%20Physics%20for%20Games/Car%20Physics%20for%20Games.html
 class Car:
     def __init__(self, position, direction, velocity):
@@ -21,19 +22,17 @@ class Car:
         for i in range(0, 2):
             for j in range(0, 2):
                 coords.append((
-                    self.rect.centerx + 
-                        self.negate(r * math.cos(math.radians(self.direction + self.negate(theta, j))), i),
-                    self.rect.centery + 
-                        self.negate(r * math.sin(math.radians(self.direction + self.negate(theta, j))), i + 1)
+                    self.position[0] + self.negate(r * math.cos(math.radians(self.direction + self.negate(theta, j))), i),
+                    self.position[1] + self.negate(r * math.sin(math.radians(self.direction + self.negate(theta, j))), i + 1)
                 ))
         return coords
-    
+
     def get_front_wheels(self):
         return self.get_rect_coords()[:2]
 
-    def negate(self, value: int, exp: int):
+    def negate(self, value: float, exp: int):
         return value * ((-1) ** exp)
-    
+
     def reset(self):
         self.position = self.initial_position
         self.direction = self.initial_direction
@@ -46,26 +45,39 @@ class Car:
         self.rect = rect
         self.surface.fill(RED)
         screen.blit(image, rect)
-        pygame.draw.line(screen, "green", self.position, (self.position[0] + (50 * math.cos(math.radians(self.direction))), self.position[1] - (50 * math.sin(math.radians(self.direction)))))
+        pygame.draw.line(screen, "green", self.position,
+                         (self.position[0] + (50 * math.cos(math.radians(self.direction))),
+                          self.position[1] - (50 * math.sin(math.radians(self.direction)))))
 
-    def handle_actions(self, dt):
-        key = pygame.key.get_pressed()
-        if key[pygame.K_w]:
-            self.accelerate(dt)
-        if key[pygame.K_s]:
-            self.accelerate(dt, True)
-        if key[pygame.K_a]:
+    def handle_actions(self, actions, dt):
+        if actions[0] == 0:
             self.turn(dt)
-        if key[pygame.K_d]:
+        elif actions[0] == 2:
             self.turn(dt, True)
+
+        if actions[1] == 1:
+            self.accelerate(dt)
+
+        if actions[2] == 1:
+            self.accelerate(dt, True)
+
+        # key = pygame.key.get_pressed()
+        # if key[pygame.K_w]:
+        #     self.accelerate(dt)
+        # if key[pygame.K_s]:
+        #     self.accelerate(dt, True)
+        # if key[pygame.K_a]:
+        #     self.turn(dt)
+        # if key[pygame.K_d]:
+        #     self.turn(dt, True)
 
         self.move(dt)
 
     # simple simulation:
-    def accelerate(self, dt, neg=False): 
+    def accelerate(self, dt, neg=False):
         coeff = 30
         accel = (((-1) ** int(neg)) * coeff) * dt
-        
+
         if self.velocity + accel < 0:
             self.velocity = 0
         else:
@@ -83,9 +95,6 @@ class Car:
 
     # def top_left_corner(self):
     #     return (self.position[0] - (self.width / 2), self.position[1] - (self.height / 2))
-
-
-
     #     self.mass = 752 # listed mass of Mercedes W12
     #     self.mu_fric = 1.7 # coefficient of friction for f1 cars is roughly 1.7
     #     self.c_
@@ -96,7 +105,7 @@ class Car:
 
     # assume 1:1 pixel to meter so maximum velocity of 93.47 m/s
     # '''
-    # def accelerate(self, neg=False): 
+    # def accelerate(self, neg=False):
     #     exp = ((-5 * self.velocity) + 12) / 3
     #     accel = (5 * (math.e ** exp)) / (3 * ((1 + (math.e ** exp) ** 2)))
     #     v_coefficient = 93.47
@@ -113,34 +122,28 @@ class Car:
     # https://commons.erau.edu/cgi/viewcontent.cgi?article=1003&context=aiaar2sc
     # '''
     # def rotate(self, right=False):
-
-
     # # bounding box - track limits
     # # think about implementing oversteer curve
     # # starting grid box - tire warmup lap ?
     # # tire friction coefficient
     # # reward - timed lap
-    
+
     # # vertical load = downforce + force of gravity
     # # downforce follows roughly quadratic relationship with velocity (df ~= v^2 / 7.5)
     # def vertical_load(self):
     #     downforce = (self.velocity ** 2) / 7.5
     #     return downforce + (self.mass * 9.81)
-    
+
     # # drag also follows roughly quadratic relationship with velocity (df ~= v^2 / 8.5)
     # def drag(self):
     #     return (self.velocity ** 2) / 8.5
-    
 
-    
     # def isAdhering(self, angular_v, radius):
     #     centripetal = self.mu_fric * self.vertical_load()
     #     centrifugal = self.mass * (angular_v ** 2) * radius
     #     return centripetal >= centrifugal
-    
+
     # tractive force - force delivered by engine to rear wheels
     # drag
     # force of rolling resistance
     # longitudinal force (parallel to motion) = traction - (drag + rr)
-
-
