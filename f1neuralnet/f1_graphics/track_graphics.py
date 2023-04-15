@@ -1,5 +1,5 @@
 import math
-from constant import GREY, TRACK_WIDTH, WHITE
+from f1neuralnet.constant import *
 
 
 def circular_arc(center: tuple[float, float], start_angle: float,
@@ -32,7 +32,7 @@ def circular_arc(center: tuple[float, float], start_angle: float,
 
         theta += delta_theta / steps
 
-    return (outer_points, inner_points)
+    return outer_points, inner_points
 
 
 def rect_points(x, y, width, height):

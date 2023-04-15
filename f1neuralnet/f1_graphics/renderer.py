@@ -1,18 +1,17 @@
 import pygame
-from constant import WHITE
-from graphics.debug import draw_debug_info
-from models.car import Car
-from models.timer import Timer
-from tracks.track import Track
+from f1neuralnet.constant import WHITE
+from f1neuralnet.f1_graphics import draw_debug_info
+from f1neuralnet.models import Car, Timer
+from f1neuralnet.tracks import OvalTrack
 
 
-def render(screen: pygame.Surface, player: Car, track: Track, timer: Timer):
+def render(screen: pygame.Surface, player: Car, track: OvalTrack, timer: Timer, generation: float, state):
     screen.fill(WHITE)
 
     track.draw(screen)
     player.draw(screen)
-
-    draw_debug_info(screen, player, track, timer)
+    
+    draw_debug_info(screen, player, track, timer, generation, state)
     # draw_debug_graphics(screen)
     # vec_coords = (math.cos(math.radians(player_car.direction)) * player_car.velocity, math.sin(math.radians(player_car.direction)) * player_car.velocity)
     # pygame.draw.line(screen, "green", player_car.position, (player_car.position[0] + vec_coords[0], player_car.position[1] - vec_coords[1]))

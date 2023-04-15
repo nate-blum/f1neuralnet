@@ -1,7 +1,5 @@
 import abc
 from pygame import Surface
-from models.car import Car
-
 
 class Track(abc.ABC):
     @abc.abstractmethod
@@ -13,11 +11,11 @@ class Track(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def is_car_within_track_limits(self, car: Car) -> bool:
+    def is_car_within_track_limits(self, car) -> bool:
         pass
 
     @abc.abstractmethod
-    def are_car_front_wheels_touching_start_finish(self, car: Car) -> bool:
+    def are_car_front_wheels_touching_start_finish(self, car) -> bool:
         pass
 
     @abc.abstractmethod

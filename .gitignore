@@ -5,3 +5,4 @@ setup.cfg
 venv
 *.egg-info
 build
+.idea

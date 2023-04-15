@@ -1,7 +1,8 @@
 from gym.envs.registration import register
+from .constant import *
 
 register(
-    id='f1neuralnet/F1NeuralNet-v11',
+    id='f1neuralnet/F1NeuralNet-v13',
     entry_point='f1neuralnet.agent:TrackEnv',
     max_episode_steps=2100,
 )

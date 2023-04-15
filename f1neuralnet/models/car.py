@@ -1,6 +1,7 @@
 import math
 import pygame
-from constant import CAR_HEIGHT, CAR_WIDTH, RED, TRANSPARENT
+from f1neuralnet.constant import *
+from shapely import LineString, MultiLineString
 
 
 # https://asawicki.info/Mirror/Car%20Physics%20for%20Games/Car%20Physics%20for%20Games.html
@@ -26,6 +27,28 @@ class Car:
                     self.position[1] + self.negate(r * math.sin(math.radians(self.direction + self.negate(theta, j))), i + 1)
                 ))
         return coords
+    
+    def intersection_length(self, intersection):
+        if type(intersection) == LineString:
+            return intersection.length
+        elif type(intersection) == MultiLineString:
+            return intersection.geoms[0].length
+    
+    def get_distances_to_track_limits(self, track):
+        return list(map(
+            lambda l: self.intersection_length(track.polygon.intersection(l)),
+            [
+                LineString([(
+                    self.position[0] + (15 * math.cos(math.radians(self.direction + i))),
+                    self.position[1] - (15 * math.sin(math.radians(self.direction + i)))
+                ),
+                (
+                    self.position[0] + (1000 * math.cos(math.radians(self.direction + i))),
+                    self.position[1] - (1000 * math.sin(math.radians(self.direction + i)))
+                )])
+                for i in range(-90, 135, 45)
+            ]
+        ))  
 
     def get_front_wheels(self):
         return self.get_rect_coords()[:2]
@@ -46,20 +69,13 @@ class Car:
         self.surface.fill(RED)
         screen.blit(image, rect)
         pygame.draw.line(screen, "green", self.position,
-                         (self.position[0] + (50 * math.cos(math.radians(self.direction))),
-                          self.position[1] - (50 * math.sin(math.radians(self.direction)))))
+                         (self.position[0] + (25 * math.cos(math.radians(self.direction))),
+                          self.position[1] - (25 * math.sin(math.radians(self.direction)))))
 
     def handle_actions(self, actions, dt):
-        if actions[0] == 0:
-            self.turn(dt)
-        elif actions[0] == 2:
-            self.turn(dt, True)
-
-        if actions[1] == 1:
-            self.accelerate(dt)
-
-        if actions[2] == 1:
-            self.accelerate(dt, True)
+        self.turn(dt * abs(actions[0]), actions[0] > 0)
+        self.accelerate(dt * actions[1])
+        self.accelerate(dt * actions[2], True)
 
         # key = pygame.key.get_pressed()
         # if key[pygame.K_w]:
@@ -75,7 +91,7 @@ class Car:
 
     # simple simulation:
     def accelerate(self, dt, neg=False):
-        coeff = 30
+        coeff = 50
         accel = (((-1) ** int(neg)) * coeff) * dt
 
         if self.velocity + accel < 0:
